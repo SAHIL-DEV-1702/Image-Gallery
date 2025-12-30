@@ -1,50 +1,69 @@
-import axios from 'axios'
-import './App.css'
-import { useState, useEffect } from 'react'
 
+import axios from 'axios'
+import { useState, useEffect, } from 'react'
 function App() {
 
+
   const [data, setData] = useState([])
+  const [page, setPage] = useState(1)
 
 
   const getData = async () => {
-
-    const response = await axios.get('https://picsum.photos/v2/list?page=8&limit=100')
-    setData(response.data)
-    console.log('data fetch successfully');
+    try {
+      const response = await axios.get(`https://picsum.photos/v2/list?page=${page}&limit=20`)
+      console.log("response from url")
+      setData(response.data)
+    }
+    catch (error) {
+      console.log("error getting data from url", error)
+    }
   }
 
-  let printData = <h3 className='text-gray-500'>USER DATA NOT FOUND</h3>
-
-  if (printData.length === 0) {
-    printData = data.map((e, idx) => <div key={idx}>{e.author}</div>)
-  }
   useEffect(() => {
     getData()
-  }, [])
+  }, [page])
+
+  const pageInc = () => {
+    setPage(page + 1)
+    console.log("page inc", page)
+    setData([])
+  }
+
+  const pageDec = () => {
+    if (page > 1) {
+      setPage(page - 1)
+      console.log("page dec", page)
+      setData([])
+
+    }
+  }
 
   return (
     <>
-      <div className="bg-green-200 h-screen w-screen flex flex-col items-center">
 
-        <div className='border-2 border-red-100 h-200 w-350 m-5 flex flex-wrap overflow-y-scroll bg-blue-200'>
+      <h1 className='h-10 mb-10 font-extrabold font-sans text-3xl text-cyan-300 text-center mt-5'> IMAGE GALLERY </h1>
 
-          <div className='flex flex-wrap justify-center'>
+      <div className="body w-screen h-175 border-2 border-black flex flex-wrap  overflow-y-scroll justify-center">
 
-            {data.map((e, idx) =>
-              <div key={idx}>
-                <a href={e.url} target="_blank" rel="noreferrer">
-                  <div className="card h-48 w-48 m-2 border border-gray-300 rounded-md overflow-hidden flex ml-10 justify-center items-center" ><img src={e.download_url} alt="not found" className='h-48 w-48 overflow-hidden' /></div>
+        {data.map((e, idx) =>
+          <a href={e.url} target="_blank" key={idx} >
+            <div className="card h-48 w-48 border-2 border-black m-5 rounded-xl overflow-hidden" >
+              <img src={e.download_url} alt="not found" className='w-full h-full' />
 
-                  <div className="text-center mt-2" >{e.author}</div>
-                </a>
-              </div>
-            )}
+            </div>
+          </a>
+        )
+        }
 
-          </div>
-        </div>
+
+      </div>
+      <div className=" h-15 flex justify-center items-center mt-5 mb-5 space-x-5">
+        <button className='h-10 w-10 border-2 active:bg-gray-300' onClick={pageDec}>prev</button>
+        <button className='h-10 w-10 border-2 active:bg-gray-300' onClick={pageInc}>next</button>
+
       </div>
     </>
+
   )
 }
 
