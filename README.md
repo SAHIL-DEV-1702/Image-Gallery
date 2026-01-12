@@ -1,5 +1,6 @@
 # IMAGE GALLERY 
-link-spimagegallery.netlify.app  
+[LINK](spimagegallery.netlify.app )
+ 
 A modern React application built with best practices for scalability, performance, and maintainability.
 
 ## 🛠️ Tech Stack
